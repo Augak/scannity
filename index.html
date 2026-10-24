@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<meta name="description" content="A lightweight, privacy-first document scanner for your phone.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>SwiftScan Lite</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<section id="authScreen" class="auth-screen">
+  <div class="auth-brand"><div class="brand-icon">▤</div><p class="eyebrow">PRIVATE BY DESIGN</p><h1>Every page,<br>under control.</h1><p class="muted">Scan, organise and export documents — even when you are offline.</p></div>
+  <div class="auth-card" id="authWelcome"><h2>Welcome to SwiftScan</h2><p class="muted">Your documents stay on this device.</p><button class="primary wide" data-auth="login">Sign in</button><button class="secondary wide" data-auth="signup">Create local account</button><button class="text-button wide" data-auth="guest">Continue as guest</button><small class="privacy-note">Local-only accounts do not sync to the cloud. Clearing browser data can remove your profile and scans.</small></div>
+  <form class="auth-card hidden" id="authForm"><button type="button" class="text-button back-auth" data-auth="welcome">← Back</button><h2 id="authTitle">Sign in</h2><p class="muted" id="authDescription">Use the profile stored on this device.</p><label class="field-label">Email or username<input id="authUser" autocomplete="username" required minlength="3" placeholder="you@example.com"></label><label class="field-label">Password<input id="authPassword" type="password" autocomplete="current-password" required minlength="4" placeholder="At least 4 characters"></label><label class="field-label hidden" id="confirmPasswordWrap">Confirm password<input id="authConfirm" type="password" autocomplete="new-password" minlength="4" placeholder="Repeat your password"></label><p class="auth-error" id="authError" role="alert"></p><button class="primary wide" id="authSubmit" type="submit">Sign in</button><button class="text-button wide" type="button" data-auth="guest">Continue without account</button><small class="privacy-note">This is a device-local profile, not a secure server account. Do not reuse an important password.</small></form>
+</section>
+<div id="appShell" class="hidden">
+<header class="topbar">
+  <div class="brand"><span class="brand-icon">▤</span><div><strong>SwiftScan Lite</strong><small>Simple document scanner</small></div></div>
+  <div class="top-actions"><button class="icon-btn" id="profileOpen" aria-label="Profile">☺</button><button class="icon-btn" id="settingsOpen" aria-label="Settings">⚙</button></div>
+</header>
+<main>
+  <section id="installBanner" class="install-banner"><div class="install-copy"><span class="install-icon">↓</span><div><strong>Take SwiftScan with you</strong><small>Install it for quick access, with offline support.</small></div></div><button id="bannerInstallBtn" class="primary">Install</button><button id="dismissInstall" class="banner-close" aria-label="Dismiss install message">×</button></section>
+  <section id="scansView" class="view active">
+    <div class="welcome"><div><p class="eyebrow">YOUR DOCUMENTS</p><h1>Scans</h1><p class="muted">Keep your papers neat and searchable.</p></div><span class="count" id="scanCount">0</span></div>
+    <div class="toolbar">
+      <label class="searchbox"><span>⌕</span><input id="homeSearch" type="search" placeholder="Search your scans"></label>
+      <select id="sortSelect" aria-label="Sort scans"><option value="newest">Newest</option><option value="oldest">Oldest</option><option value="name">Name A–Z</option><option value="opened">Last opened</option></select>
+    </div>
+    <div id="scanList" class="scan-list"></div>
+    <div id="emptyState" class="empty-state"><div class="empty-art">▤</div><h2>Your first scan starts here</h2><p>Scan a paper with your camera or import images from your phone.</p><button class="primary" data-action="new-scan">＋ Create scan</button><button class="secondary" data-action="import-files">Import files</button></div>
+    <button class="fab" data-action="new-scan"><span>＋</span> Create scan</button><button class="secondary import-fab" data-action="import-files">▧ Import files</button>
+  </section>
+
+  <section id="searchView" class="view">
+    <p class="eyebrow">FIND IT FAST</p><h1>Search</h1><p class="muted">Search scan names and descriptions.</p>
+    <label class="searchbox large"><span>⌕</span><input id="globalSearch" type="search" placeholder="Search saved scans…"></label>
+    <div id="searchResults" class="scan-list"></div>
+    <div class="hint">Search stays on this device. OCR text search can be added when an OCR engine is available.</div>
+  </section>
+
+  <section id="cameraView" class="view">
+    <div class="camera-head"><button class="icon-btn" data-action="cancel-camera" aria-label="Close">✕</button><div><h2>New scan</h2><small class="muted">Capture pages or import photos</small></div><button class="icon-btn" id="flashBtn" aria-label="Flash">⚡</button></div>
+    <div class="viewfinder" id="viewfinder"><video id="cameraVideo" autoplay playsinline muted></video><div class="camera-placeholder" id="cameraPlaceholder"><div class="camera-symbol">▧</div><strong>Ready to scan?</strong><p>Allow camera access or choose photos below.</p><button class="secondary" id="startCamera">Open camera</button></div><div class="focus-corners"></div></div>
+    <div class="camera-status" id="cameraStatus">Camera not active</div>
+    <div class="capture-row"><label class="gallery-btn">▧<span>Import</span><input id="imagePicker" type="file" accept="image/*,.pdf,.txt,.md,.html,.htm,.csv,.docx" multiple></label><button id="captureBtn" class="shutter" aria-label="Capture page"><span></span></button><button class="done-btn" id="finishScan">Done <b id="pageCount">0</b></button></div>
+    <div id="pendingPages" class="pending-pages"></div>
+    <p class="camera-note">Your images stay on your device unless you export or share them.</p>
+  </section>
+
+  <section id="editorView" class="view">
+    <div class="camera-head"><button class="icon-btn" data-action="back-editor">←</button><div><h2 id="editorTitle">Document</h2><small class="muted" id="editorMeta"></small></div><button class="icon-btn" id="renameBtn" aria-label="Rename">✎</button></div>
+    <div id="editorPages" class="editor-pages"></div>
+    <div class="editor-actions"><button class="secondary" id="addMoreBtn">＋ Add pages</button><button class="primary" id="exportPdfBtn">⇩ Export PDF</button><button class="secondary" id="previewPdfBtn">▣ Print preview</button><button class="secondary" id="shareBtn">↗ Share</button><button class="danger" id="deleteBtn">Delete scan</button></div>
+  </section>
+
+  <section id="settingsView" class="view">
+    <div class="camera-head"><button class="icon-btn" data-action="back-settings">←</button><div><h2>Settings</h2><small class="muted">Make it yours</small></div></div>
+    <p class="eyebrow">APPEARANCE</p><div class="setting-card"><div><strong>Theme</strong><small>Choose how SwiftScan looks.</small></div><select id="themeSelect"><option value="dark">Dark</option><option value="light">Light</option><option value="system">System</option></select></div>
+    <p class="eyebrow">BACKUP & STORAGE</p>
+    <button class="setting-card full" id="backupBtn"><div><strong>Backup scans</strong><small>Export scan data and images as a backup file.</small></div><span>⇩</span></button>
+    <button class="setting-card full" id="restoreBtn"><div><strong>Restore backup</strong><small>Import a SwiftScan Lite backup from this device.</small></div><span>⇧</span><input id="restorePicker" type="file" accept="application/json,.json" hidden></button>
+    <button class="setting-card full" id="clearBtn"><div><strong>Clear all scans</strong><small>Remove all locally saved documents.</small></div><span>⌫</span></button>
+    <p class="eyebrow">INSTALL & OFFLINE</p><button class="setting-card full" id="installBtn"><div><strong>Install SwiftScan Lite</strong><small>Install to your home screen for an app-like experience.</small></div><span>＋</span></button><div class="setting-card"><div><strong>Offline mode</strong><small id="offlineStatus">Ready for offline use after the first online visit.</small></div><span id="connectionDot">●</span></div>
+    <p class="eyebrow">PROFILE</p><button class="setting-card full" id="logoutBtn"><div><strong>Sign out / switch profile</strong><small>Return to the welcome screen or use another local profile.</small></div><span>↪</span></button><p class="eyebrow">ABOUT</p><div class="setting-card"><div><strong>SwiftScan Lite</strong><small>Lightweight, privacy-first scanner. Your scans are stored in this browser on this device.</small></div><span>v2.0</span></div>
+    <p class="footnote">For best results, use HTTPS (Netlify provides it) and allow camera access when prompted.</p>
+  </section>
+</main>
+<nav class="bottom-nav">
+  <button class="nav-item selected" data-view="scansView"><span>▤</span>Scans</button>
+  <button class="nav-item" data-view="searchView"><span>⌕</span>Search</button>
+  <button class="nav-item" data-action="new-scan"><span>▣</span>Scan</button>
+</nav>
+</div><!-- appShell -->
+<div id="tutorialOverlay" class="overlay hidden"><div class="tutorial-card"><div class="tutorial-progress"><span id="tutorialStepLabel">STEP 1 OF 4</span><button class="banner-close" id="skipTutorial">Skip ×</button></div><div class="tutorial-illustration" id="tutorialIcon">▤</div><h2 id="tutorialTitle">Scan anything</h2><p id="tutorialText">Use your camera to capture a page, or import pictures and supported documents from your phone.</p><div class="tutorial-dots" id="tutorialDots"></div><div class="tutorial-actions"><button class="secondary" id="tutorialBack">Back</button><button class="primary" id="tutorialNext">Next</button></div></div></div>
+<div id="printOverlay" class="overlay hidden"><div class="print-card"><div class="print-head"><div><h2>Print preview</h2><p class="muted">Review your PDF before printing or saving.</p></div><button class="icon-btn" id="closePrint" aria-label="Close preview">×</button></div><iframe id="pdfPreviewFrame" title="PDF print preview"></iframe><div class="print-actions"><button class="secondary" id="downloadPreviewPdf">Download PDF</button><button class="primary" id="printPdfBtn">Print / Save PDF</button></div></div></div>
+<input id="documentPicker" type="file" accept="image/*,.pdf,.txt,.md,.html,.htm,.csv,.docx" multiple hidden>
+<div id="toast" class="toast" role="status"></div>
+<div id="modal" class="modal hidden"><div class="modal-card"><h2 id="modalTitle">Name your scan</h2><input id="modalInput" maxlength="100" placeholder="e.g. School notes"><div class="modal-actions"><button class="secondary" id="modalCancel">Cancel</button><button class="primary" id="modalConfirm">Save</button></div></div></div>
+<script src="app.js" defer></script>
+</body>
+</html>
