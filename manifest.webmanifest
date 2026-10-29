@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "SwiftScan Lite — Offline Scanner",
-  "short_name": "SwiftScan Lite",
-  "description": "Scan, import, convert and print documents offline.",
+  "name": "Scannity — Smart Document Scanner",
+  "short_name": "Scannity",
+  "description": "Scan papers, import files, make PDFs and print — privately, even offline.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
