@@ -10,7 +10,7 @@
 <title>Scannity</title>
 <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body>\n<a class="skip-link" href="#mainContent">Skip to main content</a>
 <section id="authScreen" class="auth-screen">
   <div class="auth-brand"><div class="brand-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 7H7v10M36 7h5v10M7 31v10h10M41 31v10H31" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M15 13h14l6 6v16H15z" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="round"/><path d="M29 13v7h6M19 25h12M19 30h9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="35.5" cy="34.5" r="6.5" fill="#10130b" stroke="currentColor" stroke-width="2.5"/><path d="m40 39 4 4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></div><p class="eyebrow">PRIVATE BY DESIGN</p><h1>Every page,<br>under control.</h1><p class="muted">Scan, organise and export documents — even when you are offline.</p></div>
   <div class="auth-card" id="authWelcome"><h2>Welcome to Scannity</h2><p class="muted">Your documents stay on this device.</p><button class="primary wide" data-auth="login">Sign in</button><button class="secondary wide" data-auth="signup">Create local account</button><button class="text-button wide" data-auth="guest">Continue as guest</button><small class="privacy-note">Local-only accounts do not sync to the cloud. Clearing browser data can remove your profile and scans.</small></div>
@@ -21,12 +21,12 @@
   <div class="brand"><span class="brand-icon"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 7H7v10M36 7h5v10M7 31v10h10M41 31v10H31" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M15 13h14l6 6v16H15z" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="round"/><path d="M29 13v7h6M19 25h12M19 30h9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="35.5" cy="34.5" r="6.5" fill="#10130b" stroke="currentColor" stroke-width="2.5"/><path d="m40 39 4 4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></span><div><strong>Scannity</strong><small>Simple document scanner</small></div></div>
   <div class="top-actions"><button class="icon-btn" id="profileOpen" aria-label="Profile">☺</button><button class="icon-btn" id="settingsOpen" aria-label="Settings">⚙</button></div>
 </header>
-<main>
+<main id="mainContent" tabindex="-1">
   <section id="installBanner" class="install-banner"><div class="install-copy"><span class="install-icon">↓</span><div><strong>Take Scannity with you</strong><small>Install it for quick access, with offline support.</small></div></div><button id="bannerInstallBtn" class="primary">Install</button><button id="dismissInstall" class="banner-close" aria-label="Dismiss install message">×</button></section>
   <section id="scansView" class="view active">
     <div class="welcome"><div><p class="eyebrow">YOUR DOCUMENTS</p><h1>Scans</h1><p class="muted">Keep your papers neat and searchable.</p></div><span class="count" id="scanCount">0</span></div>
     <div class="toolbar">
-      <label class="searchbox"><span>⌕</span><input id="homeSearch" type="search" placeholder="Search your scans"></label>
+      <label class="searchbox"><span aria-hidden="true">⌕</span><input id="homeSearch" type="search" aria-label="Search your scans" placeholder="Search your scans"></label>
       <select id="sortSelect" aria-label="Sort scans"><option value="newest">Newest</option><option value="oldest">Oldest</option><option value="name">Name A–Z</option><option value="opened">Last opened</option></select>
     </div>
     <div id="scanList" class="scan-list"></div>
@@ -36,7 +36,7 @@
 
   <section id="searchView" class="view">
     <p class="eyebrow">FIND IT FAST</p><h1>Search</h1><p class="muted">Search scan names and descriptions.</p>
-    <label class="searchbox large"><span>⌕</span><input id="globalSearch" type="search" placeholder="Search saved scans…"></label>
+    <label class="searchbox large"><span aria-hidden="true">⌕</span><input id="globalSearch" type="search" aria-label="Search saved scans" placeholder="Search saved scans…"></label>
     <div id="searchResults" class="scan-list"></div>
     <div class="hint">Search stays on this device. OCR text search can be added when an OCR engine is available.</div>
   </section>
