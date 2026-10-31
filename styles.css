@@ -7,3 +7,10 @@
 .auth-brand .brand-icon{width:60px;height:60px;border-radius:19px}
 .auth-brand .brand-icon svg{width:46px;height:46px}
 .empty-art svg{width:68px;height:68px}
+
+
+/* Accessibility: visible keyboard focus, skip navigation and reduced motion */
+.skip-link{position:fixed;left:12px;top:12px;z-index:100;padding:10px 14px;border-radius:10px;background:var(--accent);color:var(--accentText);font-weight:800;transform:translateY(-160%);transition:transform .18s ease}.skip-link:focus{transform:translateY(0)}
+:where(button,a,input,select,[tabindex]):focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+main:focus{outline:none}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
