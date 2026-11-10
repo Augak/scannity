@@ -46,16 +46,23 @@
     return Array.isArray(rows) ? rows : [];
   }
 
+  function validateDocuments(documents) {
+    if (!Array.isArray(documents)) throw new TypeError("Scannity storage expects an array of scans");
+    for (const document of documents) {
+      if (!document || typeof document.id !== "string" || !document.id) {
+        throw new Error("A saved scan is missing its local ID");
+      }
+    }
+  }
+
   async function writeIndexedDocuments(documents) {
+    validateDocuments(documents);
     const database = await openDatabase();
     const transaction = database.transaction(STORE_NAME, "readwrite");
     const finished = transactionFinished(transaction);
     const store = transaction.objectStore(STORE_NAME);
     store.clear();
-    for (const document of documents) {
-      if (!document || typeof document.id !== "string" || !document.id) throw new Error("A saved scan is missing its local ID");
-      store.put(document);
-    }
+    for (const document of documents) store.put(document);
     await finished;
   }
 
@@ -68,30 +75,28 @@
   }
 
   async function load() {
-    try {
-      const stored = await readIndexedDocuments();
-      if (stored.length) return stored;
-      const legacy = readLegacyDocuments();
-      if (legacy.length) {
+    // A legacy-key value is also the write-through fallback when IndexedDB fails.
+    // Prefer it so a newer fallback save cannot be hidden by an older IDB snapshot.
+    const legacy = readLegacyDocuments();
+    if (legacy.length) {
+      try {
         await writeIndexedDocuments(legacy);
-        try { localStorage.removeItem(LEGACY_KEY); } catch { /* migration succeeded; cleanup is optional */ }
-        return legacy;
-      }
-      return [];
-    } catch (indexedError) {
-      const legacy = readLegacyDocuments();
-      if (legacy.length) return legacy;
-      throw indexedError;
+        try { localStorage.removeItem(LEGACY_KEY); } catch { /* migrated data is already in IndexedDB */ }
+      } catch { /* keep using the localStorage copy if IndexedDB is unavailable */ }
+      return legacy;
     }
+    return readIndexedDocuments();
   }
 
   async function save(documents) {
-    if (!Array.isArray(documents)) throw new TypeError("Scannity storage expects an array of scans");
+    validateDocuments(documents);
     try {
       await writeIndexedDocuments(documents);
       try { localStorage.removeItem(LEGACY_KEY); } catch { /* IndexedDB is already authoritative */ }
       return { backend: "indexeddb", warning: false };
     } catch (indexedError) {
+      // Older browsers and private-browsing modes may deny IndexedDB. Keep the old
+      // format as a compatibility fallback, but tell the UI that capacity is limited.
       try {
         localStorage.setItem(LEGACY_KEY, JSON.stringify(documents));
         return { backend: "localstorage", warning: true, error: indexedError };
