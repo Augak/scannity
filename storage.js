@@ -5,7 +5,6 @@
   const STORE_NAME = "scans";
   const LEGACY_KEY = "swiftscan-lite-documents-v1";
   let databasePromise;
-
   function openDatabase() {
     if (!globalThis.indexedDB) return Promise.reject(new Error("IndexedDB is unavailable"));
     if (databasePromise) return databasePromise;
@@ -21,14 +20,12 @@
     });
     return databasePromise;
   }
-
   function requestValue(request) {
     return new Promise((resolve, reject) => {
       request.onsuccess = () => resolve(request.result);
       request.onerror = () => reject(request.error || new Error("Local storage request failed"));
     });
   }
-
   function transactionFinished(transaction) {
     return new Promise((resolve, reject) => {
       transaction.oncomplete = () => resolve();
@@ -36,7 +33,6 @@
       transaction.onabort = () => reject(transaction.error || new Error("Local storage transaction was aborted"));
     });
   }
-
   async function readIndexedDocuments() {
     const database = await openDatabase();
     const transaction = database.transaction(STORE_NAME, "readonly");
@@ -45,16 +41,12 @@
     await finished;
     return Array.isArray(rows) ? rows : [];
   }
-
   function validateDocuments(documents) {
     if (!Array.isArray(documents)) throw new TypeError("Scannity storage expects an array of scans");
     for (const document of documents) {
-      if (!document || typeof document.id !== "string" || !document.id) {
-        throw new Error("A saved scan is missing its local ID");
-      }
+      if (!document || typeof document.id !== "string" || !document.id) throw new Error("A saved scan is missing its local ID");
     }
   }
-
   async function writeIndexedDocuments(documents) {
     validateDocuments(documents);
     const database = await openDatabase();
@@ -65,7 +57,6 @@
     for (const document of documents) store.put(document);
     await finished;
   }
-
   function readLegacyDocuments() {
     try {
       const value = localStorage.getItem(LEGACY_KEY);
@@ -73,9 +64,8 @@
       return Array.isArray(parsed) ? parsed : [];
     } catch { return []; }
   }
-
   async function load() {
-    // A legacy-key value is also the write-through fallback when IndexedDB fails.
+    // The legacy key is also the write-through fallback if an IndexedDB save fails.
     // Prefer it so a newer fallback save cannot be hidden by an older IDB snapshot.
     const legacy = readLegacyDocuments();
     if (legacy.length) {
@@ -87,7 +77,6 @@
     }
     return readIndexedDocuments();
   }
-
   async function save(documents) {
     validateDocuments(documents);
     try {
@@ -95,8 +84,6 @@
       try { localStorage.removeItem(LEGACY_KEY); } catch { /* IndexedDB is already authoritative */ }
       return { backend: "indexeddb", warning: false };
     } catch (indexedError) {
-      // Older browsers and private-browsing modes may deny IndexedDB. Keep the old
-      // format as a compatibility fallback, but tell the UI that capacity is limited.
       try {
         localStorage.setItem(LEGACY_KEY, JSON.stringify(documents));
         return { backend: "localstorage", warning: true, error: indexedError };
@@ -106,6 +93,5 @@
       }
     }
   }
-
   globalThis.ScannityStorage = Object.freeze({ load, save });
 })();
