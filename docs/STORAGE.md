@@ -23,3 +23,6 @@ Run node tests/storage.test.cjs. The tests use a deterministic in-memory Indexed
 
 
 Fallback precedence: if an IndexedDB write fails, the newer localStorage fallback copy takes precedence on the next launch. After it is successfully migrated back into IndexedDB, the fallback key is removed. Invalid scan records are rejected before a read-write transaction begins, so validation cannot clear an existing document store.
+
+
+Fallback precedence: when an IndexedDB write fails, the newer localStorage fallback copy takes precedence on the next launch. After it is successfully migrated back into IndexedDB, the fallback key is removed. Invalid scan records are rejected before a read-write transaction begins, so validation cannot clear an existing document store.
