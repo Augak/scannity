@@ -20,3 +20,6 @@ IndexedDB increases the practical storage capacity but does not guarantee perman
 ## Verification
 
 Run node tests/storage.test.cjs. The tests use a deterministic in-memory IndexedDB test double and cover normal save/load, one-time migration, and fallback behavior. A real Android Chrome test is still required for camera capture, larger multi-page scans, browser quota behavior, and app restart persistence.
+
+
+Fallback precedence: if an IndexedDB write fails, the newer localStorage fallback copy takes precedence on the next launch. After it is successfully migrated back into IndexedDB, the fallback key is removed. Invalid scan records are rejected before a read-write transaction begins, so validation cannot clear an existing document store.
