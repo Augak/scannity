@@ -82,5 +82,21 @@ function makeEnvironment({ indexed = true, initialLegacy = null } = {}) {
     assert.equal(result.warning, true);
     assert.deepEqual(JSON.parse(JSON.stringify(await env.api.load())), docs);
   }
-  console.log("3 storage adapter tests passed");
+  {
+    const env = makeEnvironment();
+    const older = [{ id: "same-id", name: "Older IDB snapshot", pages: [] }];
+    const newer = [{ id: "same-id", name: "Newer fallback snapshot", pages: [] }];
+    await env.api.save(older);
+    env.localStorage.setItem("swiftscan-lite-documents-v1", JSON.stringify(newer));
+    assert.deepEqual(JSON.parse(JSON.stringify(await env.api.load())), newer);
+    assert.equal(env.localStorage.getItem("swiftscan-lite-documents-v1"), null);
+  }
+  {
+    const env = makeEnvironment();
+    const docs = [{ id: "keep-me", name: "Existing scan", pages: [] }];
+    await env.api.save(docs);
+    await assert.rejects(env.api.save([{ name: "Missing ID" }]));
+    assert.deepEqual(JSON.parse(JSON.stringify(await env.api.load())), docs);
+  }
+  console.log("5 storage adapter tests passed");
 })().catch(error => { console.error(error); process.exitCode = 1; });
