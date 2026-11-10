@@ -1,36 +1,29 @@
-SwiftScan Lite — Offline Scanner v2.0
-====================================
+# Scannity
 
-DEPLOY TO NETLIFY DROP
-1. Extract this ZIP on your phone or computer.
-2. Open https://app.netlify.com/drop while online.
-3. Upload the extracted swiftscan-lite folder (or the folder contents).
-4. Open the HTTPS URL Netlify provides in Chrome.
-5. Wait for the first visit to finish caching, then use Chrome menu > Install app / Add to Home screen.
-6. Test by reopening the installed app with Wi-Fi and mobile data turned off.
+A lightweight, privacy-first document scanner PWA. Capture pages with the device camera, import supported files, organise scans locally, and export PDFs without creating an account or uploading documents.
 
-FEATURES
-- Local welcome, sign-in and create-profile screens; optional guest mode.
-- First-run guided tutorial.
-- Install callout with install button.
-- Camera capture and image import.
-- Import existing PDF files for preview, printing and download.
-- Convert images and plain-text/Markdown/CSV/HTML files to PDF offline.
-- Print preview for generated scan PDFs and imported PDFs.
-- Search, sort, rename, rotate pages, delete scans, export PDFs, backup/restore.
-- Dark/light/system theme and offline service-worker cache.
+## Local preview
 
-SUPPORTED IMPORT TYPES
-Images: common browser-supported image types.
-PDF: imported and retained as a PDF for preview/print/download.
-Text documents: TXT, MD, CSV, HTML/HTM converted into PDF pages.
-DOCX: basic text extraction is supported on modern browsers with DecompressionStream; complex layouts, tables and images may not be preserved. If conversion fails, export it as PDF or TXT first.
+Serve the repository root over HTTP or HTTPS. For example, run a static server from the project directory and open its local address in a modern browser. Camera access requires HTTPS or localhost.
 
-IMPORTANT LIMITATIONS
-- This is an installable Progressive Web App (PWA), not a compiled native APK.
-- Browser security does not permit unrestricted access to all phone storage. Use the system file picker and grant the files you want to import.
-- Camera access requires HTTPS and browser permission.
-- Profiles are stored locally in this browser only; they are not secure server accounts and do not sync. Do not reuse an important password. Guest mode is available.
-- Scans are saved in browser storage, which has device/browser quotas. Export backups regularly and avoid importing very large PDFs.
-- Offline mode works after the first successful online visit and service-worker caching. Clearing browser data can remove saved scans and profile data.
-- OCR and automatic page-edge detection are not included.
+## Local storage and migration
+
+New scans are stored in IndexedDB rather than localStorage so that multi-page documents and imported PDFs are not constrained by the small localStorage quota. On first launch after this update, Scannity migrates the previous swiftscan-lite-documents-v1 record into IndexedDB and removes the old copy after a successful migration. If IndexedDB is unavailable, the app falls back to localStorage and displays a limited-storage warning.
+
+All scan data remains in the current browser profile on the device. Browser storage can still be cleared by the operating system or the user; use Settings > Backup scans regularly. The local profile screen is only a convenience and is not server authentication or encryption.
+
+## Tests
+
+Run the storage adapter tests with Node.js:
+
+    node tests/storage.test.cjs
+
+These tests cover IndexedDB-style save/load, legacy localStorage migration, and the compatibility fallback. They use a small in-memory IndexedDB test double; they do not replace physical-browser testing.
+
+## Deployment
+
+Deploy the repository root as a static site on an HTTPS host such as Netlify or GitHub Pages. Keep index.html, styles.css, app.js, storage.js, manifest.webmanifest, sw.js, and icon.svg at the same root level. The service worker caches the storage adapter as part of the offline app shell.
+
+## Accessibility and device testing
+
+Use TalkBack to verify the first-run tutorial, camera controls, import picker, scan list, editor actions, dialogs, and PDF preview. Test with large text, reduced motion, and narrow Android screens. Camera and file-picker behavior must be tested on a real device.
