@@ -2,7 +2,6 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const vm = require("node:vm");
 const path = require("node:path");
-
 function makeEnvironment({ indexed = true, initialLegacy = null } = {}) {
   const local = new Map();
   if (initialLegacy !== null) local.set("swiftscan-lite-documents-v1", JSON.stringify(initialLegacy));
@@ -56,7 +55,6 @@ function makeEnvironment({ indexed = true, initialLegacy = null } = {}) {
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, "..", "storage.js"), "utf8"), context);
   return { api: context.ScannityStorage, localStorage };
 }
-
 (async () => {
   {
     const env = makeEnvironment();
