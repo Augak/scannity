@@ -1,0 +1,10 @@
+{
+  "name": "scannity",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Local-first scanning, QR/barcode and document reader PWA",
+  "scripts": {
+    "check": "node --check app.js && node --check studio.js && node --check storage.js",
+    "test": "npm run check && node tests/smoke.test.cjs && node tests/storage.test.cjs"
+  }
+}
