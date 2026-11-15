@@ -26,3 +26,6 @@ button,input,select,textarea{font-family:-apple-system,BlinkMacSystemFont,'Segoe
 :focus-visible{outline:3px solid #1769e0;outline-offset:2px}
 
 .ocr-results{grid-column:1/-1}.ocr-text{white-space:pre-wrap;overflow-wrap:anywhere;max-height:55vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;font-size:13px;line-height:1.6}
+
+/* In-app help and terms disclosures */
+.setting-card details{width:100%}.setting-card summary{cursor:pointer;list-style-position:inside}.sc-help{grid-column:1/-1;padding:12px 4px 0;color:var(--muted);font-size:12px;line-height:1.6}.sc-help p{margin:10px 0}.sc-help b{color:var(--text)}.page-tools{flex-wrap:wrap}.page-tools button{min-height:34px}
