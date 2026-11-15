@@ -27,3 +27,21 @@ Deploy the repository root as a static site on an HTTPS host such as Netlify or 
 ## Accessibility and device testing
 
 Use TalkBack to verify the first-run tutorial, camera controls, import picker, scan list, editor actions, dialogs, and PDF preview. Test with large text, reduced motion, and narrow Android screens. Camera and file-picker behavior must be tested on a real device.
+
+
+## Scannity 3.0 product direction
+
+Scannity is an account-free, local-first scanning and file workspace. The web app opens directly into the workspace; there is no sign-in or registration requirement.
+
+### Current workspace additions
+- QR and barcode studio: QR generation and barcode generation (Code 128, EAN-13, UPC, Code 39 and ITF), with PNG/SVG export.
+- Live camera and image-based code scanning where the browser exposes the Barcode Detection API.
+- Universal reader: PDF preview, text/Markdown/RTF/SQL/JSON/XML, CSV tables, safe HTML preview/source, DOCX text extraction, XLS/XLSX sheet preview, PPTX slide-text extraction, and SQLite database table inspection.
+- OCR for scanned image pages using Tesseract.js (English language data is downloaded on first use).
+- Account-free launch, refreshed Scannity identity, loader, and an expanded tool workspace.
+
+### Privacy and compatibility
+Files are processed in the browser. Some reader engines are loaded from public CDNs when their feature is first used, so those specific tools require an internet connection on first use. The core PWA and locally saved scans remain available offline after the app shell has been cached. Avoid opening untrusted links from scanned QR codes; Scannity displays the result before the user chooses to open it.
+
+### Planned quality upgrades
+The next engineering phases are document boundary detection and perspective correction, image enhancement filters, searchable PDF text layers, multi-format document export/conversion, richer spreadsheet and presentation rendering, additional barcode decoder fallbacks, batch label generation, and device-level native camera/file integrations. These are planned enhancements, not claims that every format or premium feature is already complete.
