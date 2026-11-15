@@ -14,3 +14,13 @@
 :where(button,a,input,select,[tabindex]):focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 main:focus{outline:none}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* Scannity 3.0: refined native-feeling interface */
+body.light .topbar{border-bottom:1px solid var(--line)}
+body.light .primary{background:#1769e0;color:#fff}
+body.light .brand-icon{background:#1769e0;color:#fff}
+#logoutBtn{display:none!important}
+#appShell{min-height:100dvh}
+.scan-card,.setting-card,.searchbox,.toolbar select,.empty-state,.viewfinder,.modal-card{border-radius:18px}
+button,input,select,textarea{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+:focus-visible{outline:3px solid #1769e0;outline-offset:2px}
