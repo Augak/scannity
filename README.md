@@ -14,7 +14,7 @@ Scannity is an account-free, local-first document scanner and file workspace des
 - Run document edge detection and perspective correction on a captured page (OpenCV.js).
 - Export multi-page PDFs and print previews.
 - Run English OCR on scanned image pages, download extracted text, and create a searchable PDF with an invisible text layer.
-- Back up and restore local scans.
+- Back up and restore local scans; clear the app cache without deleting saved documents.
 
 ### QR and barcode studio
 - Generate QR codes and download as SVG or PNG.
