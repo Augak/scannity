@@ -64,3 +64,7 @@ This PWA is installable where supported and requests camera access at the point 
 - DOC/PPT legacy binary files and full Office editing are not included.
 - External feature engines require a first download before their offline cache is available.
 - Physical Android testing is required for camera focus, flash, storage quotas, large files, low-memory behaviour and install/update flows.
+
+## Developer and related work
+
+Scannity is part of the independent product work of [Kastine Augak](https://augak.github.io/kastineaugak.github.io/). Visit the official portfolio for project context, related products, research and contact information.
