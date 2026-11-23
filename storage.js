@@ -65,8 +65,6 @@
     } catch { return []; }
   }
   async function load() {
-    // The legacy key is also the write-through fallback if an IndexedDB save fails.
-    // Prefer it so a newer fallback save cannot be hidden by an older IDB snapshot.
     const legacy = readLegacyDocuments();
     if (legacy.length) {
       try {
@@ -93,5 +91,28 @@
       }
     }
   }
-  globalThis.ScannityStorage = Object.freeze({ load, save });
+  async function diagnostics() {
+    const storage = globalThis.navigator?.storage;
+    const result = {
+      backend: globalThis.indexedDB ? "indexeddb-preferred" : "localstorage-fallback",
+      persistent: null,
+      usage: null,
+      quota: null,
+      percentUsed: null
+    };
+    if (!storage) return result;
+    if (typeof storage.persisted === "function") {
+      try { result.persistent = await storage.persisted(); } catch { result.persistent = null; }
+    }
+    if (typeof storage.estimate === "function") {
+      try {
+        const estimate = await storage.estimate();
+        result.usage = Number.isFinite(estimate.usage) ? estimate.usage : null;
+        result.quota = Number.isFinite(estimate.quota) ? estimate.quota : null;
+        if (result.usage !== null && result.quota > 0) result.percentUsed = Math.round((result.usage / result.quota) * 1000) / 10;
+      } catch { /* storage estimates are optional */ }
+    }
+    return result;
+  }
+  globalThis.ScannityStorage = Object.freeze({ load, save, diagnostics });
 })();
