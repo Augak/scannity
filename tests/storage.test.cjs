@@ -96,5 +96,13 @@ function makeEnvironment({ indexed = true, initialLegacy = null } = {}) {
     await assert.rejects(env.api.save([{ name: "Missing ID" }]));
     assert.deepEqual(JSON.parse(JSON.stringify(await env.api.load())), docs);
   }
-  console.log("5 storage adapter tests passed");
+  {
+    const env = makeEnvironment();
+    const diagnostics = await env.api.diagnostics();
+    assert.equal(diagnostics.backend, "indexeddb-preferred");
+    assert.equal(diagnostics.persistent, null);
+    assert.equal(diagnostics.usage, null);
+    assert.equal(diagnostics.quota, null);
+  }
+  console.log("6 storage adapter tests passed");
 })().catch(error => { console.error(error); process.exitCode = 1; });
